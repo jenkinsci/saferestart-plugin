@@ -24,34 +24,20 @@
 
 package org.jenkins.ci.plugins.saferestart;
 
-import hudson.Extension;
-import hudson.model.RootAction;
+import jenkins.model.Jenkins;
 
 /**
- * Action for SafeRestart. Added restart link to left-side panel.
+ * Some reusable Jenkins oriented utilities.
  * 
  * @author Seiji Sogabe
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
-@Extension
-public class SafeRestartRootAction implements RootAction {
-  public String getDisplayName() {
-    return Messages.SafeRestartRootAction_displayName();
+public class JenkinsUtils {
+  public static boolean canRestart() {
+    return Jenkins.getInstance().getLifecycle().canRestart();
   }
 
-  public String getIconFileName() {
-    if (!JenkinsUtils.hasAdministerPermission()) {
-      return null;
-    }
-
-    if (!JenkinsUtils.canRestart()) {
-      return null;
-    }
-
-    return "/plugin/" + Contsants.ID + "/images/24x24/" + Contsants.ICON;
-  }
-
-  public String getUrlName() {
-    return Contsants.RESTART_URL;
+  public static boolean hasAdministerPermission() {
+    return Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER);
   }
 }
