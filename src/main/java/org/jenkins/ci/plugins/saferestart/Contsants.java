@@ -28,6 +28,7 @@ package org.jenkins.ci.plugins.saferestart;
  * Constant variables which used in plugin.
  * 
  * @author Seiji Sogabe
+ * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
 public final class Contsants {
   /**

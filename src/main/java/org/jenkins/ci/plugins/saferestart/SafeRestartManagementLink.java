@@ -34,9 +34,18 @@ import org.kohsuke.stapler.StaplerRequest;
  * ManagementLink for SafeRestart. Added restart link to system administrator.
  * 
  * @author Seiji Sogabe
+ * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
 @Extension
 public class SafeRestartManagementLink extends ManagementLink {
+  protected static String getUrlName(final StaplerRequest request) {
+    if (request == null) {
+      return Contsants.RESTART_URL;
+    }
+
+    return request.getContextPath() + Contsants.RESTART_URL;
+  }
+
   @Override
   public String getDescription() {
     return Messages.SafeRestartManagementLink_description();
@@ -53,10 +62,6 @@ public class SafeRestartManagementLink extends ManagementLink {
 
   @Override
   public String getUrlName() {
-    final StaplerRequest req = Stapler.getCurrentRequest();
-    if (req != null) {
-      return req.getContextPath() + Contsants.RESTART_URL;
-    }
-    return Contsants.RESTART_URL;
+    return getUrlName(Stapler.getCurrentRequest());
   }
 }
