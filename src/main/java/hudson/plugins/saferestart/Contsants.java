@@ -25,7 +25,7 @@
 package hudson.plugins.saferestart;
 
 /**
- * Constant valiables which used in plugin.
+ * Constant variables which used in plugin.
  * 
  * @author Seiji Sogabe
  */

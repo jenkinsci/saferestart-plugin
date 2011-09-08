@@ -26,13 +26,12 @@ package hudson.plugins.saferestart;
 
 import hudson.Extension;
 import hudson.model.ManagementLink;
-import hudson.model.Hudson;
 
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- * ManagementLink for SafeRestart. added restrat link to system admin.
+ * ManagementLink for SafeRestart. Added restart link to system administrator.
  * 
  * @author Seiji Sogabe
  */
@@ -52,14 +51,6 @@ public class SafeRestartManagementLink extends ManagementLink {
     return "/plugin/" + Contsants.ID + "/images/48x48/" + Contsants.ICON;
   }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * <p>
-   * In case of {@link ManagementLink}, this value is put straight into the href
-   * attribute, so relative paths are interpreted against the root
-   * {@link Hudson} object.
-   */
   @Override
   public String getUrlName() {
     final StaplerRequest req = Stapler.getCurrentRequest();
