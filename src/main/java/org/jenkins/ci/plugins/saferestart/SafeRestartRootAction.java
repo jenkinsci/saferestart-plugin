@@ -22,32 +22,35 @@
  * SOFTWARE.
  */
 
-package hudson.plugins.saferestart;
+package org.jenkins.ci.plugins.saferestart;
+
+import hudson.Extension;
+import hudson.model.RootAction;
+import hudson.model.Hudson;
 
 /**
- * Constant variables which used in plugin.
+ * Action for SafeResatrt. added restart link to left-side panel.
  * 
  * @author Seiji Sogabe
  */
-public final class Contsants {
-  /**
-   * Plugin ID.
-   */
-  public static final String ID          = "saferestart";
+@Extension
+public class SafeRestartRootAction implements RootAction {
+  public String getDisplayName() {
+    return Messages.SafeRestartRootAction_displayName();
+  }
 
-  /**
-   * Icon.
-   */
-  public static final String ICON        = "quick_restart.png";
+  public String getIconFileName() {
+    if (!hasAdministerPermission()) {
+      return null;
+    }
+    return "/plugin/" + Contsants.ID + "/images/24x24/" + Contsants.ICON;
+  }
 
-  /**
-   * Restart URL.
-   */
-  public static final String RESTART_URL = "/safeRestart";
+  public String getUrlName() {
+    return Contsants.RESTART_URL;
+  }
 
-  /**
-   * Constructor.
-   */
-  private Contsants() {
+  private boolean hasAdministerPermission() {
+    return Hudson.getInstance().hasPermission(Hudson.ADMINISTER);
   }
 }

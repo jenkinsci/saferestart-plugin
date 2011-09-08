@@ -22,41 +22,32 @@
  * SOFTWARE.
  */
 
-package hudson.plugins.saferestart;
-
-import hudson.Extension;
-import hudson.model.ManagementLink;
-
-import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
+package org.jenkins.ci.plugins.saferestart;
 
 /**
- * ManagementLink for SafeRestart. Added restart link to system administrator.
+ * Constant variables which used in plugin.
  * 
  * @author Seiji Sogabe
  */
-@Extension
-public class SafeRestartManagementLink extends ManagementLink {
-  @Override
-  public String getDescription() {
-    return Messages.SafeRestartManagementLink_description();
-  }
+public final class Contsants {
+  /**
+   * Plugin ID.
+   */
+  public static final String ID          = "saferestart";
 
-  public String getDisplayName() {
-    return Messages.SafeRestartManagementLink_displayName();
-  }
+  /**
+   * Icon.
+   */
+  public static final String ICON        = "quick_restart.png";
 
-  @Override
-  public String getIconFileName() {
-    return "/plugin/" + Contsants.ID + "/images/48x48/" + Contsants.ICON;
-  }
+  /**
+   * Restart URL.
+   */
+  public static final String RESTART_URL = "/safeRestart";
 
-  @Override
-  public String getUrlName() {
-    final StaplerRequest req = Stapler.getCurrentRequest();
-    if (req != null) {
-      return req.getContextPath() + Contsants.RESTART_URL;
-    }
-    return Contsants.RESTART_URL;
+  /**
+   * Constructor.
+   */
+  private Contsants() {
   }
 }

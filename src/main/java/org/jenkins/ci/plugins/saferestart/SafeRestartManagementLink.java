@@ -22,35 +22,41 @@
  * SOFTWARE.
  */
 
-package hudson.plugins.saferestart;
+package org.jenkins.ci.plugins.saferestart;
 
 import hudson.Extension;
-import hudson.model.RootAction;
-import hudson.model.Hudson;
+import hudson.model.ManagementLink;
+
+import org.kohsuke.stapler.Stapler;
+import org.kohsuke.stapler.StaplerRequest;
 
 /**
- * Action for SafeResatrt. added restart link to left-side panel.
+ * ManagementLink for SafeRestart. Added restart link to system administrator.
  * 
  * @author Seiji Sogabe
  */
 @Extension
-public class SafeRestartRootAction implements RootAction {
+public class SafeRestartManagementLink extends ManagementLink {
+  @Override
+  public String getDescription() {
+    return Messages.SafeRestartManagementLink_description();
+  }
+
   public String getDisplayName() {
-    return Messages.SafeRestartRootAction_displayName();
+    return Messages.SafeRestartManagementLink_displayName();
   }
 
+  @Override
   public String getIconFileName() {
-    if (!hasAdministerPermission()) {
-      return null;
-    }
-    return "/plugin/" + Contsants.ID + "/images/24x24/" + Contsants.ICON;
+    return "/plugin/" + Contsants.ID + "/images/48x48/" + Contsants.ICON;
   }
 
+  @Override
   public String getUrlName() {
+    final StaplerRequest req = Stapler.getCurrentRequest();
+    if (req != null) {
+      return req.getContextPath() + Contsants.RESTART_URL;
+    }
     return Contsants.RESTART_URL;
-  }
-
-  private boolean hasAdministerPermission() {
-    return Hudson.getInstance().hasPermission(Hudson.ADMINISTER);
   }
 }
