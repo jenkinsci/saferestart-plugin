@@ -30,7 +30,7 @@ package org.jenkins.ci.plugins.saferestart;
  * @author Seiji Sogabe
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
-public final class Contsants {
+public final class Constants {
   /**
    * Plugin ID.
    */
@@ -49,6 +49,6 @@ public final class Contsants {
   /**
    * Constructor.
    */
-  private Contsants() {
+  private Constants() {
   }
 }

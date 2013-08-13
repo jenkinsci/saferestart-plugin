@@ -40,10 +40,10 @@ import org.kohsuke.stapler.StaplerRequest;
 public class SafeRestartManagementLink extends ManagementLink {
   protected static String getUrlName(final StaplerRequest request) {
     if (request == null) {
-      return Contsants.RESTART_URL;
+      return Constants.RESTART_URL;
     }
 
-    return request.getContextPath() + Contsants.RESTART_URL;
+    return request.getContextPath() + Constants.RESTART_URL;
   }
 
   @Override
@@ -57,7 +57,7 @@ public class SafeRestartManagementLink extends ManagementLink {
 
   @Override
   public String getIconFileName() {
-    return "/plugin/" + Contsants.ID + "/images/48x48/" + Contsants.ICON;
+    return "/plugin/" + Constants.ID + "/images/48x48/" + Constants.ICON;
   }
 
   @Override
