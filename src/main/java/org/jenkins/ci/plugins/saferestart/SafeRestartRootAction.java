@@ -48,10 +48,10 @@ public class SafeRestartRootAction implements RootAction {
       return null;
     }
 
-    return "/plugin/" + Contsants.ID + "/images/24x24/" + Contsants.ICON;
+    return "/plugin/" + Constants.ID + "/images/24x24/" + Constants.ICON;
   }
 
   public String getUrlName() {
-    return Contsants.RESTART_URL;
+    return Constants.RESTART_URL;
   }
 }
