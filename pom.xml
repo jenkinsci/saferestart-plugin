@@ -35,6 +35,7 @@
     </parent>
 
     <artifactId>saferestart</artifactId>
+    <version>0.5-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>Safe Restart Plugin</name>
