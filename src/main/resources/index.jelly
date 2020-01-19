@@ -22,6 +22,7 @@
   THE SOFTWARE.
 -->
 
+<?jelly escape-by-default='true'?>
 <div>
   <span>This plugin allows you to restart Jenkins safely.</span>
 </div>
