@@ -64,4 +64,8 @@ public class SafeRestartManagementLink extends ManagementLink {
   public String getUrlName() {
     return getUrlName(Stapler.getCurrentRequest());
   }
+  
+  public String getCategoryName() {
+    return "TOOLS";
+  }
 }
