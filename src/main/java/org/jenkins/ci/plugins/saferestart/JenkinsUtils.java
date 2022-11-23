@@ -34,10 +34,10 @@ import jenkins.model.Jenkins;
  */
 public class JenkinsUtils {
   public static boolean canRestart() {
-    return Jenkins.getInstance().getLifecycle().canRestart();
+    return Jenkins.get().getLifecycle().canRestart();
   }
 
   public static boolean hasAdministerPermission() {
-    return Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER);
+    return Jenkins.get().hasPermission(Jenkins.ADMINISTER);
   }
 }
