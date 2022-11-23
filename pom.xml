@@ -36,7 +36,7 @@
     </parent>
 
     <artifactId>saferestart</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6</version>
     <packaging>hpi</packaging>
 
     <name>Safe Restart Plugin</name>
@@ -68,7 +68,7 @@
         <connection>scm:git:git://github.com/jenkinsci/saferestart-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/saferestart-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/saferestart-plugin</url>
-      <tag>saferestart-0.5</tag>
+      <tag>saferestart-0.6</tag>
   </scm>
 
     <repositories>
