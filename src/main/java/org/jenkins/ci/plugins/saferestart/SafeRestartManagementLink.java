@@ -24,15 +24,18 @@
 
 package org.jenkins.ci.plugins.saferestart;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import hudson.Extension;
 import hudson.model.ManagementLink;
+import hudson.model.ManagementLink.Category;
 
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * ManagementLink for SafeRestart. Added restart link to system administrator.
- * 
+ *
  * @author Seiji Sogabe
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
@@ -64,8 +67,10 @@ public class SafeRestartManagementLink extends ManagementLink {
   public String getUrlName() {
     return getUrlName(Stapler.getCurrentRequest());
   }
-  
-  public String getCategoryName() {
-    return "TOOLS";
+
+  @Override
+  @NonNull
+  public Category getCategory() {
+    return Category.TOOLS;
   }
 }
