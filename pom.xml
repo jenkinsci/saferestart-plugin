@@ -89,6 +89,9 @@
         <revision>0.8</revision>
         <changelist>-SNAPSHOT</changelist>
         <jenkins.version>2.346.3</jenkins.version>
+        <spotbugs.effort>Max</spotbugs.effort>
+        <spotbugs.failOnError>true</spotbugs.failOnError>
+        <spotbugs.threshold>Low</spotbugs.threshold>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     </properties>
 
