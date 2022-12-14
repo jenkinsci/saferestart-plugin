@@ -7,7 +7,9 @@ This plugin Adds a column on the jenkins dashboard that shows the actual node th
 You can contribute in many ways, and whatever you choose we're grateful
 Source code contribution is the obvious one but we also need your feedback and if you don't really want to participate in the implementation directly you may still have great ideas about features we need.
 
-We have our vision for the plugin and we have an experience with maintaining Jenkins instances, but the plugin is not supposed to solve only our problems. Surely we haven't experienced all of them... That's why we want to hear from you.
+We have our vision for the plugin and we have an experience with maintaining Jenkins instances, but the plugin is not supposed to solve only our problems.
+Surely we haven't experienced all of them...
+That's why we want to hear from you.
 
 Please use GitHub issues if you need to report a bug or request changes/improvements. Whenever you report a problem please provide information about:
 
