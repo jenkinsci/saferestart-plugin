@@ -22,7 +22,7 @@ Please use GitHub issues if you need to report a bug or request changes/improvem
 
 Prerequisites: Java, Maven 
 
- * Ensure Java 8 or 11 is available.
+ * Ensure Java 11 or 17 is available.
 
 ```bash
   $ java -version	
