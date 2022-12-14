@@ -11,7 +11,7 @@ We have our vision for the plugin and we have an experience with maintaining Jen
 Surely we haven't experienced all of them...
 That's why we want to hear from you.
 
-Please use GitHub issues if you need to report a bug or request changes/improvements. Whenever you report a problem please provide information about:
+Please use Jenkins Jira if you need to [report a bug](https://www.jenkins.io/participate/report-issue/redirect/#16072) or [request changes/improvements](https://issues.jenkins.io/secure/CreateIssueDetails!init.jspa?pid=10172&issuetype=2&priority=4&components=16072). Whenever you report a problem please provide information about:
 
 * Jenkins version, operating system version, and plugin versions (using the script from ["How to report an issue"](https://www.jenkins.io/participate/report-issue/#Howtoreportanissue-WhatinformationtoprovideforEnvironmentandDescription))
 * Description!
