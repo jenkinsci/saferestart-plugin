@@ -37,7 +37,8 @@ Prerequisites: Java, Maven
   mvn hpi:run
 ```
 
-* That starts a Jenkins controller with the minimum Jenkins version supported by the plugin and loads the plugin and its dependencies into that controller. Jenkins will be running on port 8080 and can be reached with the URL http://localhost:8080/jenkins/
+* That starts a Jenkins controller with the minimum Jenkins version supported by the plugin and loads the plugin and its dependencies into that controller.
+  Jenkins will be running on port 8080 and can be reached with the URL http://localhost:8080/jenkins/
 
   If a plugin maintainer wants to use a different Jenkins version, they run the command:
 
