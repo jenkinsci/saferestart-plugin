@@ -13,9 +13,7 @@ That's why we want to hear from you.
 
 Please use GitHub issues if you need to report a bug or request changes/improvements. Whenever you report a problem please provide information about:
 
-* Plugin version (Configuration as Code plugin as well any other plugin you suspect your problem to be related to)
-* Jenkins version
-* Operating system
+* Jenkins version, operating system version, and plugin versions (using the script from ["How to report an issue"](https://www.jenkins.io/participate/report-issue/#Howtoreportanissue-WhatinformationtoprovideforEnvironmentandDescription))
 * Description!
 
 # Run Locally
