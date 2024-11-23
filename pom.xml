@@ -88,7 +88,8 @@
     <properties>
         <revision>0.8</revision>
         <changelist>-SNAPSHOT</changelist>
-        <jenkins.version>2.361.4</jenkins.version>
+        <jenkins.baseline>2.361</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.4</jenkins.version>
         <spotbugs.effort>Max</spotbugs.effort>
         <spotbugs.threshold>Low</spotbugs.threshold>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
