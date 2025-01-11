@@ -23,8 +23,10 @@
  */
 package org.jenkins.ci.plugins.saferestart;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import hudson.Functions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -38,7 +40,11 @@ public class JenkinsUtilsTest {
 
     @Test
     public void testCanRestart() {
-        assertTrue(JenkinsUtils.canRestart());
+        if (Functions.isWindows()) {
+            assertFalse(JenkinsUtils.canRestart());
+        } else {
+            assertTrue(JenkinsUtils.canRestart());
+        }
     }
 
     @Test
