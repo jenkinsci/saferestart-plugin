@@ -52,6 +52,7 @@ public class SafeRestartManagementLink extends ManagementLink {
         return Messages.SafeRestartManagementLink_description();
     }
 
+    @Override
     public String getDisplayName() {
         return Messages.SafeRestartManagementLink_displayName();
     }

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package org.jenkins.ci.plugins.saferestart;
 
 import hudson.Extension;
@@ -35,10 +34,13 @@ import hudson.model.RootAction;
  */
 @Extension
 public class SafeRestartRootAction implements RootAction {
+
+    @Override
     public String getDisplayName() {
         return Messages.SafeRestartRootAction_displayName();
     }
 
+    @Override
     public String getIconFileName() {
         if (!JenkinsUtils.hasAdministerPermission()) {
             return null;
@@ -51,6 +53,7 @@ public class SafeRestartRootAction implements RootAction {
         return Constants.ICON;
     }
 
+    @Override
     public String getUrlName() {
         return Constants.RESTART_URL;
     }
