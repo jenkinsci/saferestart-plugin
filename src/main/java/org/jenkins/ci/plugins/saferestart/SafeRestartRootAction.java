@@ -48,7 +48,7 @@ public class SafeRestartRootAction implements RootAction {
       return null;
     }
 
-    return "/plugin/" + Constants.ID + "/images/24x24/" + Constants.ICON;
+    return Constants.ICON;
   }
 
   public String getUrlName() {
