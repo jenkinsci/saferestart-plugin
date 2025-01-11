@@ -26,7 +26,9 @@ package org.jenkins.ci.plugins.saferestart;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import org.junit.Before;
+import hudson.model.Action;
+import java.util.List;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -38,11 +40,16 @@ public class SafeRestartRootActionTest {
 
     public SafeRestartRootActionTest() {}
 
-    private SafeRestartRootAction action;
+    private static SafeRestartRootAction action;
 
-    @Before
-    public void createAction() {
-        action = new SafeRestartRootAction();
+    @BeforeClass
+    public static void createAction() {
+        List<Action> actions = j.jenkins.getActions();
+        for (Action a : actions) {
+            if (a instanceof SafeRestartRootAction) {
+                action = (SafeRestartRootAction) a;
+            }
+        }
     }
 
     @Test
