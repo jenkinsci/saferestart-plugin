@@ -25,11 +25,9 @@
 package org.jenkins.ci.plugins.saferestart;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-
 import hudson.Extension;
 import hudson.model.ManagementLink;
 import hudson.model.ManagementLink.Category;
-
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -41,36 +39,36 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 @Extension
 public class SafeRestartManagementLink extends ManagementLink {
-  protected static String getUrlName(final StaplerRequest request) {
-    if (request == null) {
-      return Constants.RESTART_URL;
+    protected static String getUrlName(final StaplerRequest request) {
+        if (request == null) {
+            return Constants.RESTART_URL;
+        }
+
+        return request.getContextPath() + Constants.RESTART_URL;
     }
 
-    return request.getContextPath() + Constants.RESTART_URL;
-  }
+    @Override
+    public String getDescription() {
+        return Messages.SafeRestartManagementLink_description();
+    }
 
-  @Override
-  public String getDescription() {
-    return Messages.SafeRestartManagementLink_description();
-  }
+    public String getDisplayName() {
+        return Messages.SafeRestartManagementLink_displayName();
+    }
 
-  public String getDisplayName() {
-    return Messages.SafeRestartManagementLink_displayName();
-  }
+    @Override
+    public String getIconFileName() {
+        return Constants.ICON;
+    }
 
-  @Override
-  public String getIconFileName() {
-    return Constants.ICON;
-  }
+    @Override
+    public String getUrlName() {
+        return getUrlName(Stapler.getCurrentRequest());
+    }
 
-  @Override
-  public String getUrlName() {
-    return getUrlName(Stapler.getCurrentRequest());
-  }
-
-  @Override
-  @NonNull
-  public Category getCategory() {
-    return Category.TOOLS;
-  }
+    @Override
+    @NonNull
+    public Category getCategory() {
+        return Category.TOOLS;
+    }
 }

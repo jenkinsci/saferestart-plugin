@@ -1,18 +1,18 @@
 /*
  * The MIT License
- * 
+ *
  * Copyright (c) 2010-2011, Seiji Sogabe, Jesse Farinacci
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,29 +29,29 @@ import hudson.model.RootAction;
 
 /**
  * Action for SafeRestart. Added restart link to left-side panel.
- * 
+ *
  * @author Seiji Sogabe
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
 @Extension
 public class SafeRestartRootAction implements RootAction {
-  public String getDisplayName() {
-    return Messages.SafeRestartRootAction_displayName();
-  }
-
-  public String getIconFileName() {
-    if (!JenkinsUtils.hasAdministerPermission()) {
-      return null;
+    public String getDisplayName() {
+        return Messages.SafeRestartRootAction_displayName();
     }
 
-    if (!JenkinsUtils.canRestart()) {
-      return null;
+    public String getIconFileName() {
+        if (!JenkinsUtils.hasAdministerPermission()) {
+            return null;
+        }
+
+        if (!JenkinsUtils.canRestart()) {
+            return null;
+        }
+
+        return Constants.ICON;
     }
 
-    return Constants.ICON;
-  }
-
-  public String getUrlName() {
-    return Constants.RESTART_URL;
-  }
+    public String getUrlName() {
+        return Constants.RESTART_URL;
+    }
 }
