@@ -39,7 +39,7 @@ public final class Constants {
   /**
    * Icon.
    */
-  public static final String ICON        = "quick_restart.png";
+  public static final String ICON        = "symbol-reload";
 
   /**
    * Restart URL.

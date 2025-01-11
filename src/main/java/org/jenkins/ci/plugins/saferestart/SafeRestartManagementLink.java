@@ -60,7 +60,7 @@ public class SafeRestartManagementLink extends ManagementLink {
 
   @Override
   public String getIconFileName() {
-    return "/plugin/" + Constants.ID + "/images/48x48/" + Constants.ICON;
+    return Constants.ICON;
   }
 
   @Override
