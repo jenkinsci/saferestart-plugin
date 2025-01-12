@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010-2011, Seiji Sogabe, Jesse Farinacci
+ * Copyright 2025 Mark Waite.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,26 +18,37 @@
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package org.jenkins.ci.plugins.saferestart;
 
-import jenkins.model.Jenkins;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-/**
- * Some reusable Jenkins oriented utilities.
- *
- * @author Seiji Sogabe
- * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
- */
-public class JenkinsUtils {
-    public static boolean canRestart() {
-        return Jenkins.get().getLifecycle().canRestart();
+import hudson.Functions;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+
+public class JenkinsUtilsTest {
+
+    @ClassRule
+    public static JenkinsRule j = new JenkinsRule();
+
+    public JenkinsUtilsTest() {}
+
+    @Test
+    public void testCanRestart() {
+        if (Functions.isWindows()) {
+            assertFalse(JenkinsUtils.canRestart());
+        } else {
+            assertTrue(JenkinsUtils.canRestart());
+        }
     }
 
-    public static boolean hasAdministerPermission() {
-        return Jenkins.get().hasPermission(Jenkins.ADMINISTER);
+    @Test
+    public void testHasAdministerPermission() {
+        assertTrue(JenkinsUtils.hasAdministerPermission());
     }
 }

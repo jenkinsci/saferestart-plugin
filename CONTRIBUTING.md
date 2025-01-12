@@ -1,61 +1,61 @@
-# Built-on-column-plugin
+# Contributing to the Safe Restart Plugin
 
-This plugin Adds a column on the Jenkins dashboard that shows the actual node the last build was run on.
+Plugin source code is hosted on [GitHub](https://github.com/jenkinsci/saferestart-plugin).
+New feature proposals and bug fix proposals should be submitted as [GitHub pull requests](https://help.github.com/articles/creating-a-pull-request).
+Your pull request will be evaluated by the [Jenkins job](https://ci.jenkins.io/job/Plugins/job/saferestart-plugin/).
 
-# Why should you contribute
+Before submitting your change, please assure that you've added tests that verify the change.
 
-You can contribute in many ways, and whatever you choose we're grateful
-Source code contribution is the obvious one but we also need your feedback and if you don't really want to participate in the implementation directly you may still have great ideas about features we need.
+## Building and running the plugin
 
-We have our vision for the plugin and we have an experience with maintaining Jenkins instances, but the plugin is not supposed to solve only our problems.
-Surely we haven't experienced all of them...
-That's why we want to hear from you.
+The [plugin build process](https://www.jenkins.io/doc/developer/plugin-development/build-process/) is described in detail in the [plugin development chapter](https://www.jenkins.io/doc/developer/plugin-development/) of the [Jenkins developer guide](https://www.jenkins.io/doc/developer/).
 
-Please use Jenkins Jira if you need to [report a bug](https://www.jenkins.io/participate/report-issue/redirect/#16072) or [request changes/improvements](https://issues.jenkins.io/secure/CreateIssueDetails!init.jspa?pid=10172&issuetype=2&priority=4&components=16072).
-Whenever you report a problem please provide information about:
+A development copy of the plugin can be run locally with the command:
 
-* Jenkins version, operating system version, and plugin versions (using the script from ["How to report an issue"](https://www.jenkins.io/participate/report-issue/#Howtoreportanissue-WhatinformationtoprovideforEnvironmentandDescription))
-* Description!
-
-# Run Locally
-
-Prerequisites: Java, Maven 
-
- * Ensure Java 11 or 17 is available.
-
-```bash
-  $ java -version	
+```
+mvn hpi:run
 ```
 
-- Ensure Maven is included in the PATH environment variable.
+When submitting a pull request, please refer to the [plugin testing guidance](https://www.jenkins.io/doc/developer/plugin-development/plugin-release-tips/) in the Jenkins developer guide.
 
-```bash
-  export PATH=$PATH:/path/to/apache-maven-3.8.6/bin
-```
-* To run a plugin locally, the command is:
+## Code formatting
 
-```bash
-  mvn hpi:run
-```
+Source code and pom file formatting is maintained by the `spotless` maven plugin.
+Before submitting a pull request, confirm the formatting is correct with:
 
-* That starts a Jenkins controller with the minimum Jenkins version supported by the plugin and loads the plugin and its dependencies into that controller.
-  Jenkins will be running on port 8080 and can be reached with the URL http://localhost:8080/jenkins/
+* `mvn spotless:apply`
 
-  If a plugin maintainer wants to use a different Jenkins version, they run the command:
+## Spotbugs checks
 
+Please don't introduce new spotbugs output.
 
-```bash
-  mvn -Djenkins.version=2.375.1 hpi:run
-```
+* `mvn spotbugs:check` analyzes the project using [Spotbugs](https://spotbugs.github.io)
+* `mvn spotbugs:gui` displays the spotbugs report using GUI
 
-* If a plugin maintainer wants to use a different HTTP port, (as in http://localhost:9090/jenkins) they run the command:
+## Code coverage
 
-```bash
-  mvn -Dport=9090 hpi:run
-```
+Code coverage reporting is available as a maven target.
+Please try to improve code coverage with tests when you submit pull requests.
 
-* If a plugin maintainer wants to allow other computers to access that Jenkins controller while it is running, they run the command:
+* `mvn -P enable-jacoco clean install jacoco:report` reports code coverage
 
-```bash
-  mvn -Dhost=0.0.0.0 hpi:run
-```
+### Reviewing code coverage
+
+The code coverage report shows methods and lines executed.
+The following commands will open the `index.html` file in the browser.
+
+* Windows - `start target\site\jacoco\index.html`
+* Linux - `xdg-open target/site/jacoco/index.html`
+* Gitpod - `cd target/site/jacoco && python -m http.server 8000`
+
+The file will have a list of package names.
+Click on them to find a list of class names.
+
+The lines of the code will be covered in three different colors, red, green, and orange.
+Red lines are not covered in the tests.
+Green lines are covered with tests.
+
+## Reporting Issues
+
+Report issues in the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#16072).
+Please follow the guidelines in ["How to Report an Issue"](https://www.jenkins.io/participate/report-issue/) when reporting issues.
