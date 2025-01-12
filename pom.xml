@@ -34,7 +34,7 @@
   </parent>
 
   <artifactId>saferestart</artifactId>
-  <version>${revision}${changelist}</version>
+  <version>${changelist}</version>
   <packaging>hpi</packaging>
 
   <name>Safe Restart Plugin</name>
@@ -56,8 +56,7 @@
   </scm>
 
   <properties>
-    <revision>0.8</revision>
-    <changelist>-SNAPSHOT</changelist>
+    <changelist>999999-SNAPSHOT</changelist>
     <jenkins.baseline>2.452</jenkins.baseline>
     <jenkins.version>${jenkins.baseline}.4</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
