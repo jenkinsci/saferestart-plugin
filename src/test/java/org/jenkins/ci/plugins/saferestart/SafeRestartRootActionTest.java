@@ -29,7 +29,6 @@ import static org.junit.Assume.assumeFalse;
 
 import hudson.Functions;
 import hudson.model.Action;
-import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -45,9 +44,8 @@ public class SafeRestartRootActionTest {
     private static SafeRestartRootAction action;
 
     @BeforeClass
-    public static void createAction() {
-        List<Action> actions = j.jenkins.getActions();
-        for (Action a : actions) {
+    public static void findExistingAction() {
+        for (Action a : j.jenkins.getActions()) {
             if (a instanceof SafeRestartRootAction) {
                 action = (SafeRestartRootAction) a;
             }
