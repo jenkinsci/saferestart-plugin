@@ -42,7 +42,7 @@ public class SafeRestartManagementLinkTest {
     }
 
     @Test
-    public void testGetUrlName_StaplerRequest() {
+    public void testGetUrlName_StaplerRequest2() {
         assertThat(SafeRestartManagementLink.getUrlName(null), is(Constants.RESTART_URL));
     }
 

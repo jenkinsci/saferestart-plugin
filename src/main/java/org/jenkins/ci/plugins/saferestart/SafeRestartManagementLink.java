@@ -29,7 +29,7 @@ import hudson.Extension;
 import hudson.model.ManagementLink;
 import hudson.model.ManagementLink.Category;
 import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 /**
  * ManagementLink for SafeRestart. Added restart link to system administrator.
@@ -39,7 +39,7 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 @Extension
 public class SafeRestartManagementLink extends ManagementLink {
-    protected static String getUrlName(final StaplerRequest request) {
+    protected static String getUrlName(final StaplerRequest2 request) {
         if (request == null) {
             return Constants.RESTART_URL;
         }
@@ -64,7 +64,7 @@ public class SafeRestartManagementLink extends ManagementLink {
 
     @Override
     public String getUrlName() {
-        return getUrlName(Stapler.getCurrentRequest());
+        return getUrlName(Stapler.getCurrentRequest2());
     }
 
     @Override
