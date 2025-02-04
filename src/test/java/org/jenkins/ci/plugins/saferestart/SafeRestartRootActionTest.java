@@ -46,8 +46,8 @@ public class SafeRestartRootActionTest {
     @BeforeClass
     public static void findExistingAction() {
         for (Action a : j.jenkins.getActions()) {
-            if (a instanceof SafeRestartRootAction) {
-                action = (SafeRestartRootAction) a;
+            if (a instanceof SafeRestartRootAction rootAction) {
+                action = rootAction;
             }
         }
     }
