@@ -25,26 +25,26 @@ package org.jenkins.ci.plugins.saferestart;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import hudson.Functions;
 import hudson.model.Action;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class SafeRestartRootActionTest {
-
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
-
-    public SafeRestartRootActionTest() {}
+@WithJenkins
+class SafeRestartRootActionTest {
 
     private static SafeRestartRootAction action;
 
-    @BeforeClass
-    public static void findExistingAction() {
+    private static JenkinsRule j;
+
+    @BeforeAll
+    static void setUp(JenkinsRule rule) {
+        j = rule;
+
         for (Action a : j.jenkins.getActions()) {
             if (a instanceof SafeRestartRootAction rootAction) {
                 action = rootAction;
@@ -53,18 +53,18 @@ public class SafeRestartRootActionTest {
     }
 
     @Test
-    public void testGetDisplayName() {
+    void testGetDisplayName() {
         assertThat(action.getDisplayName(), is("Restart Safely"));
     }
 
     @Test
-    public void testGetIconFileName() {
-        assumeFalse("Test fails on Windows for unknown reasons", Functions.isWindows());
+    void testGetIconFileName() {
+        assumeFalse(Functions.isWindows(), "Test fails on Windows for unknown reasons");
         assertThat(action.getIconFileName(), is("symbol-reload"));
     }
 
     @Test
-    public void testGetUrlName() {
+    void testGetUrlName() {
         assertThat(action.getUrlName(), is("/safeRestart"));
     }
 }
