@@ -27,47 +27,56 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import hudson.model.ManagementLink;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class SafeRestartManagementLinkTest {
+@WithJenkins
+class SafeRestartManagementLinkTest {
+
+    private static JenkinsRule j;
 
     private SafeRestartManagementLink managementLink;
 
-    public SafeRestartManagementLinkTest() {}
+    @BeforeAll
+    static void setUp(JenkinsRule rule) {
+        j = rule;
+    }
 
-    @Before
-    public void createManagementLink() {
+    @BeforeEach
+    void createManagementLink() {
         managementLink = new SafeRestartManagementLink();
     }
 
     @Test
-    public void testGetUrlName_StaplerRequest2() {
+    void testGetUrlName_StaplerRequest2() {
         assertThat(SafeRestartManagementLink.getUrlName(null), is(Constants.RESTART_URL));
     }
 
     @Test
-    public void testGetDescription() {
+    void testGetDescription() {
         assertThat(managementLink.getDescription(), is("Restart once no jobs are running."));
     }
 
     @Test
-    public void testGetDisplayName() {
+    void testGetDisplayName() {
         assertThat(managementLink.getDisplayName(), is("Restart Safely"));
     }
 
     @Test
-    public void testGetIconFileName() {
+    void testGetIconFileName() {
         assertThat(managementLink.getIconFileName(), is("symbol-reload"));
     }
 
     @Test
-    public void testGetUrlName() {
+    void testGetUrlName() {
         assertThat(managementLink.getUrlName(), is("/safeRestart"));
     }
 
     @Test
-    public void testGetCategory() {
+    void testGetCategory() {
         assertThat(managementLink.getCategory(), is(ManagementLink.Category.TOOLS));
     }
 }

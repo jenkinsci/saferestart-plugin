@@ -23,23 +23,27 @@
  */
 package org.jenkins.ci.plugins.saferestart;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import hudson.Functions;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class JenkinsUtilsTest {
+@WithJenkins
+class JenkinsUtilsTest {
 
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
+    private static JenkinsRule j;
 
-    public JenkinsUtilsTest() {}
+    @BeforeAll
+    static void setUp(JenkinsRule rule) {
+        j = rule;
+    }
 
     @Test
-    public void testCanRestart() {
+    void testCanRestart() {
         if (Functions.isWindows()) {
             assertFalse(JenkinsUtils.canRestart());
         } else {
@@ -48,7 +52,7 @@ public class JenkinsUtilsTest {
     }
 
     @Test
-    public void testHasAdministerPermission() {
+    void testHasAdministerPermission() {
         assertTrue(JenkinsUtils.hasAdministerPermission());
     }
 }
