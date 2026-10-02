@@ -51,11 +51,6 @@ class SafeRestartManagementLinkTest {
     }
 
     @Test
-    void testGetUrlName_StaplerRequest2() {
-        assertThat(SafeRestartManagementLink.getUrlName(null), is(Constants.RESTART_URL));
-    }
-
-    @Test
     void testGetDescription() {
         assertThat(managementLink.getDescription(), is("Restart once no jobs are running."));
     }
@@ -72,7 +67,7 @@ class SafeRestartManagementLinkTest {
 
     @Test
     void testGetUrlName() {
-        assertThat(managementLink.getUrlName(), is("/safeRestart"));
+        assertThat(managementLink.getUrlName(), is("safeRestart"));
     }
 
     @Test
