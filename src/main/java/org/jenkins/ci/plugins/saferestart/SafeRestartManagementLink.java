@@ -28,8 +28,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.ManagementLink;
 import hudson.model.ManagementLink.Category;
-import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest2;
 
 /**
  * ManagementLink for SafeRestart. Added restart link to system administrator.
@@ -39,13 +37,6 @@ import org.kohsuke.stapler.StaplerRequest2;
  */
 @Extension
 public class SafeRestartManagementLink extends ManagementLink {
-    protected static String getUrlName(final StaplerRequest2 request) {
-        if (request == null) {
-            return Constants.RESTART_URL;
-        }
-
-        return request.getContextPath() + Constants.RESTART_URL;
-    }
 
     @Override
     public String getDescription() {
@@ -64,7 +55,10 @@ public class SafeRestartManagementLink extends ManagementLink {
 
     @Override
     public String getUrlName() {
-        return getUrlName(Stapler.getCurrentRequest2());
+        // ManagementLink.getUrlName() is resolved by core relative to the Jenkins root, so it
+        // must not include the context path (unlike Constants.RESTART_URL, used by
+        // SafeRestartRootAction, which is intentionally context-path-relative).
+        return Constants.RESTART_URL.substring(1);
     }
 
     @Override
