@@ -1,0 +1,53 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form">
+  <l:layout title="${it.displayName}" permission="${app.ADMINISTER}" type="one-column">
+    <l:main-panel>
+      <l:app-bar title="${it.displayName}"/>
+      <j:choose>
+        <j:when test="${!app.lifecycle.canRestart()}">
+          <p>${%Jenkins cannot restart itself on this platform.}</p>
+        </j:when>
+        <j:when test="${it.drain.active}">
+          <p>${%Started {1} ago by {0}.(it.drain.startedBy, it.sinceAgo)}</p>
+          <j:if test="${it.drain.message != null}">
+            <p>${%Restart message}: ${it.drain.message}</p>
+          </j:if>
+          <j:set var="running" value="${it.drain.runningBuilds}"/>
+          <j:choose>
+            <j:when test="${empty(running)}">
+              <p>${%No builds are running. Jenkins is about to restart.}</p>
+            </j:when>
+            <j:otherwise>
+              <p>${%New builds are held back. Jenkins restarts once these builds finish:}</p>
+              <ul>
+                <j:forEach var="run" items="${running}">
+                  <li><a href="${rootURL}/${run.url}">${run.fullDisplayName}</a></li>
+                </j:forEach>
+              </ul>
+              <p>${%Running builds can still start their remaining node steps and the builds they trigger themselves.}</p>
+            </j:otherwise>
+          </j:choose>
+          <form method="post" action="cancel" name="cancel">
+            <f:bottomButtonBar>
+              <f:submit value="${%Cancel}"/>
+            </f:bottomButtonBar>
+          </form>
+        </j:when>
+        <j:otherwise>
+          <p>${%New builds are held back while running builds, including Pipelines, finish. Jenkins then restarts. If nothing is running, Jenkins restarts right away.}</p>
+          <j:if test="${app.quietingDown}">
+            <p>${%Jenkins is already preparing to shut down. Pipeline builds that still need an executor will pause and resume after the restart.}</p>
+          </j:if>
+          <form method="post" action="start" name="start">
+            <f:entry title="${%Restart message}" description="${%Shown in the shutdown banner once the restart begins. Optional.}">
+              <f:textbox name="message"/>
+            </f:entry>
+            <f:bottomButtonBar>
+              <f:submit clazz="jenkins-!-destructive-color" value="${%Start}"/>
+            </f:bottomButtonBar>
+          </form>
+        </j:otherwise>
+      </j:choose>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>
