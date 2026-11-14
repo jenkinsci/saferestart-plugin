@@ -1,0 +1,10 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <div class="jenkins-alert jenkins-alert-warning">
+    <form method="post" action="${rootURL}/${it.url}/cancel" name="${it.id}">
+      <f:submit value="${%Cancel}"/>
+    </form>
+    ${%Jenkins will restart once running builds finish. Still running: {0}.(it.runningCount)}
+    <a href="${rootURL}/safeRestartDrain">${%Details}</a>
+  </div>
+</j:jelly>
