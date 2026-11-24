@@ -32,14 +32,19 @@ import hudson.model.ManagementLink.Category;
 /**
  * ManagementLink for SafeRestart. Added restart link to system administrator.
  *
+ * <p>With "wait for running builds" enabled in {@link SafeRestartConfiguration}, the link leads to
+ * the {@link RestartDrainAction} page instead of the core safe restart.
+ *
  * @author Seiji Sogabe
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
 @Extension
 public class SafeRestartManagementLink extends ManagementLink {
-
     @Override
     public String getDescription() {
+        if (SafeRestartConfiguration.get().isWaitForRunningBuilds()) {
+            return Messages.SafeRestartManagementLink_descriptionDrain();
+        }
         return Messages.SafeRestartManagementLink_description();
     }
 
@@ -53,11 +58,15 @@ public class SafeRestartManagementLink extends ManagementLink {
         return Constants.ICON;
     }
 
+    /**
+     * ManagementLink URLs are resolved against the Jenkins root, unlike {@link Constants#RESTART_URL}
+     * used by the root action, so no context path and no leading slash.
+     */
     @Override
     public String getUrlName() {
-        // ManagementLink.getUrlName() is resolved by core relative to the Jenkins root, so it
-        // must not include the context path (unlike Constants.RESTART_URL, used by
-        // SafeRestartRootAction, which is intentionally context-path-relative).
+        if (SafeRestartConfiguration.get().isWaitForRunningBuilds()) {
+            return Constants.DRAIN_URL;
+        }
         return Constants.RESTART_URL.substring(1);
     }
 

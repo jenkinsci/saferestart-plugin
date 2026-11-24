@@ -29,6 +29,9 @@ import hudson.model.RootAction;
 /**
  * Action for SafeRestart. Added restart link to left-side panel.
  *
+ * <p>With "wait for running builds" enabled in {@link SafeRestartConfiguration}, the link leads to
+ * the {@link RestartDrainAction} page instead of the core safe restart.
+ *
  * @author Seiji Sogabe
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
@@ -55,6 +58,9 @@ public class SafeRestartRootAction implements RootAction {
 
     @Override
     public String getUrlName() {
+        if (SafeRestartConfiguration.get().isWaitForRunningBuilds()) {
+            return "/" + Constants.DRAIN_URL;
+        }
         return Constants.RESTART_URL;
     }
 }

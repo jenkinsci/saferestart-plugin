@@ -47,6 +47,11 @@ public final class Constants {
     public static final String RESTART_URL = "/safeRestart";
 
     /**
+     * URL of the drain page: block new builds, let running builds finish, then restart.
+     */
+    public static final String DRAIN_URL = "safeRestartDrain";
+
+    /**
      * Constructor.
      */
     private Constants() {}

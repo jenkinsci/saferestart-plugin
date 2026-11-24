@@ -1,0 +1,13 @@
+<div>
+  When enabled, the <b>Restart Safely</b> links of this plugin hold back new builds, let every running
+  build finish all its stages, and then restart Jenkins. The core safe restart instead pauses Pipeline
+  builds at their next stage boundary and resumes them after the restart.
+  <p>
+    While waiting, running builds can still start their remaining <code>node</code> steps and the
+    builds they trigger themselves. A build that never finishes, for example one waiting on an
+    <code>input</code> step, holds the restart until you cancel it.
+  </p>
+  <p>
+    The CLI <code>safe-restart</code> command, the REST endpoint and other plugins are not affected.
+  </p>
+</div>
