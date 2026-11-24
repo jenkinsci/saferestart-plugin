@@ -24,9 +24,7 @@
 package org.jenkins.ci.plugins.saferestart;
 
 import hudson.Extension;
-import hudson.ExtensionList;
 import hudson.model.RootAction;
-import org.kohsuke.stapler.StaplerProxy;
 
 /**
  * Action for SafeRestart. Added restart link to left-side panel.
@@ -38,7 +36,7 @@ import org.kohsuke.stapler.StaplerProxy;
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
 @Extension
-public class SafeRestartRootAction implements RootAction, StaplerProxy {
+public class SafeRestartRootAction implements RootAction {
 
     @Override
     public String getDisplayName() {
@@ -61,20 +59,8 @@ public class SafeRestartRootAction implements RootAction, StaplerProxy {
     @Override
     public String getUrlName() {
         if (SafeRestartConfiguration.get().isWaitForRunningBuilds()) {
-            return Constants.DRAIN_URL;
+            return "/" + Constants.DRAIN_URL;
         }
         return Constants.RESTART_URL;
-    }
-
-    /**
-     * {@link jenkins.model.Jenkins#getDynamic} may resolve the drain URL to this action because the
-     * URL names match, so requests are forwarded to {@link RestartDrainAction} in that mode.
-     */
-    @Override
-    public Object getTarget() {
-        if (SafeRestartConfiguration.get().isWaitForRunningBuilds()) {
-            return ExtensionList.lookupSingleton(RestartDrainAction.class);
-        }
-        return this;
     }
 }

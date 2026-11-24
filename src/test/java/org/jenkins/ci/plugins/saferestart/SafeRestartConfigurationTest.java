@@ -58,7 +58,7 @@ class SafeRestartConfigurationTest {
     @Test
     void linksPointToDrainPageWhenEnabled(JenkinsRule j) {
         SafeRestartConfiguration.get().setWaitForRunningBuilds(true);
-        assertThat(new SafeRestartRootAction().getUrlName(), is(Constants.DRAIN_URL));
+        assertThat(new SafeRestartRootAction().getUrlName(), is("/" + Constants.DRAIN_URL));
         assertThat(new SafeRestartManagementLink().getUrlName(), is(Constants.DRAIN_URL));
         assertThat(
                 new SafeRestartManagementLink().getDescription(),

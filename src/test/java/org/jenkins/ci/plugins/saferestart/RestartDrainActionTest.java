@@ -32,13 +32,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import hudson.ExtensionList;
 import hudson.model.FreeStyleBuild;
+import hudson.model.ListView;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.htmlunit.HttpMethod;
 import org.htmlunit.Page;
 import org.htmlunit.WebRequest;
+import org.htmlunit.html.HtmlAnchor;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.util.NameValuePair;
 import org.jenkins.ci.plugins.saferestart.RestartDrainTestSupport.BlockingBuilder;
@@ -88,29 +91,85 @@ class RestartDrainActionTest {
     @Test
     void startAndCancelOverHttp(JenkinsRule j) throws Exception {
         FakeRestarter restarter = installFakeRestarter();
+        RestartDrainAction action = ExtensionList.lookupSingleton(RestartDrainAction.class);
+        action.setCanRestart(() -> true);
         BlockingBuilder blocker = new BlockingBuilder();
         FreeStyleBuild blockerBuild = startBlocker(j.createFreeStyleProject("blocker"), blocker);
-        JenkinsRule.WebClient wc = j.createWebClient();
+        try {
+            JenkinsRule.WebClient wc = j.createWebClient();
 
-        WebRequest start = new WebRequest(new URL(j.getURL(), Constants.DRAIN_URL + "/start"), HttpMethod.POST);
-        wc.addCrumb(start);
-        List<NameValuePair> params = new ArrayList<>(start.getRequestParameters());
-        params.add(new NameValuePair("message", "maintenance"));
-        start.setRequestParameters(params);
-        Page afterStart = wc.getPage(start);
-        assertThat(afterStart.getWebResponse().getStatusCode(), is(200));
-        assertTrue(RestartDrain.get().isActive());
-        assertEquals("maintenance", RestartDrain.get().getMessage());
+            WebRequest start = new WebRequest(new URL(j.getURL(), Constants.DRAIN_URL + "/start"), HttpMethod.POST);
+            wc.addCrumb(start);
+            List<NameValuePair> params = new ArrayList<>(start.getRequestParameters());
+            params.add(new NameValuePair("message", "maintenance"));
+            start.setRequestParameters(params);
+            Page afterStart = wc.getPage(start);
+            assertThat(afterStart.getWebResponse().getStatusCode(), is(200));
+            assertTrue(RestartDrain.get().isActive());
+            assertEquals("maintenance", RestartDrain.get().getMessage());
 
-        WebRequest cancel = new WebRequest(new URL(j.getURL(), Constants.DRAIN_URL + "/cancel"), HttpMethod.POST);
-        wc.addCrumb(cancel);
-        Page afterCancel = wc.getPage(cancel);
-        assertThat(afterCancel.getWebResponse().getStatusCode(), is(200));
-        assertFalse(RestartDrain.get().isActive());
-
-        blocker.release(blockerBuild.getNumber());
-        j.assertBuildStatusSuccess(j.waitForCompletion(blockerBuild));
+            WebRequest cancel = new WebRequest(new URL(j.getURL(), Constants.DRAIN_URL + "/cancel"), HttpMethod.POST);
+            wc.addCrumb(cancel);
+            Page afterCancel = wc.getPage(cancel);
+            assertThat(afterCancel.getWebResponse().getStatusCode(), is(200));
+            assertFalse(RestartDrain.get().isActive());
+        } finally {
+            action.setCanRestart(JenkinsUtils::canRestart);
+            RestartDrain.get().cancel();
+            blocker.release(blockerBuild.getNumber());
+            j.assertBuildStatusSuccess(j.waitForCompletion(blockerBuild));
+        }
         assertEquals(0, restarter.calls.get());
+    }
+
+    @Test
+    void startIsRejectedWhenJenkinsCannotRestart(JenkinsRule j) throws Exception {
+        FakeRestarter restarter = installFakeRestarter();
+        RestartDrainAction action = ExtensionList.lookupSingleton(RestartDrainAction.class);
+        action.setCanRestart(() -> false);
+        try {
+            JenkinsRule.WebClient wc = j.createWebClient();
+            wc.setThrowExceptionOnFailingStatusCode(false);
+
+            WebRequest start = new WebRequest(new URL(j.getURL(), Constants.DRAIN_URL + "/start"), HttpMethod.POST);
+            wc.addCrumb(start);
+            Page response = wc.getPage(start);
+            assertThat(response.getWebResponse().getStatusCode(), is(400));
+            assertFalse(RestartDrain.get().isActive());
+            assertEquals(0, restarter.calls.get());
+        } finally {
+            action.setCanRestart(JenkinsUtils::canRestart);
+            RestartDrain.get().cancel();
+        }
+    }
+
+    @Test
+    void drainLinkResolvesFromSecondaryView(JenkinsRule j) throws Exception {
+        installFakeRestarter();
+        j.jenkins.addView(new ListView("secondary"));
+        RestartDrainAction action = ExtensionList.lookupSingleton(RestartDrainAction.class);
+        action.setCanRestart(() -> true);
+        try {
+            JenkinsRule.WebClient wc = j.createWebClient();
+            HtmlPage viewPage = wc.goTo("view/secondary/");
+            HtmlAnchor drainLink = viewPage.getAnchorByText(Messages.RestartDrainAction_displayName());
+            HtmlPage drainPage = drainLink.click();
+            assertThat(drainPage.getWebResponse().getStatusCode(), is(200));
+            assertThat(drainPage.getUrl().getPath(), containsString("/" + Constants.DRAIN_URL));
+
+            if (JenkinsUtils.canRestart()) {
+                SafeRestartConfiguration.get().setWaitForRunningBuilds(true);
+                HtmlPage viewPageDrainDefault = wc.goTo("view/secondary/");
+                HtmlAnchor safeRestartLink =
+                        viewPageDrainDefault.getAnchorByText(Messages.SafeRestartRootAction_displayName());
+                HtmlPage safeRestartDrainPage = safeRestartLink.click();
+                assertThat(safeRestartDrainPage.getWebResponse().getStatusCode(), is(200));
+                assertThat(safeRestartDrainPage.getUrl().getPath(), containsString("/" + Constants.DRAIN_URL));
+            }
+        } finally {
+            SafeRestartConfiguration.get().setWaitForRunningBuilds(false);
+            action.setCanRestart(JenkinsUtils::canRestart);
+        }
     }
 
     @Test

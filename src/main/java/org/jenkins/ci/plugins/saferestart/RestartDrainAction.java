@@ -25,10 +25,15 @@
 package org.jenkins.ci.plugins.saferestart;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.Util;
 import hudson.model.RootAction;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.function.BooleanSupplier;
 import jenkins.model.Jenkins;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.QueryParameter;
@@ -40,6 +45,8 @@ import org.kohsuke.stapler.interceptor.RequirePOST;
  */
 @Extension
 public class RestartDrainAction implements RootAction {
+
+    private volatile BooleanSupplier canRestart = JenkinsUtils::canRestart;
 
     @Override
     public String getDisplayName() {
@@ -53,7 +60,7 @@ public class RestartDrainAction implements RootAction {
     @Override
     @CheckForNull
     public String getIconFileName() {
-        if (!JenkinsUtils.hasAdministerPermission() || !JenkinsUtils.canRestart()) {
+        if (!JenkinsUtils.hasAdministerPermission() || !canRestart.getAsBoolean()) {
             return null;
         }
         if (SafeRestartConfiguration.get().isWaitForRunningBuilds()) {
@@ -87,6 +94,10 @@ public class RestartDrainAction implements RootAction {
     @RequirePOST
     public HttpResponse doStart(@QueryParameter String message) {
         Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+        if (!canRestart.getAsBoolean()) {
+            return HttpResponses.errorWithoutStack(
+                    HttpServletResponse.SC_BAD_REQUEST, Messages.RestartDrainAction_cannotRestart());
+        }
         RestartDrain.get().start(message);
         return HttpResponses.redirectToDot();
     }
@@ -99,5 +110,10 @@ public class RestartDrainAction implements RootAction {
         Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         RestartDrain.get().cancel();
         return HttpResponses.redirectToDot();
+    }
+
+    @Restricted(NoExternalUse.class)
+    void setCanRestart(@NonNull BooleanSupplier canRestart) {
+        this.canRestart = canRestart;
     }
 }
