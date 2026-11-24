@@ -27,23 +27,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import hudson.Functions;
-import org.junit.jupiter.api.BeforeAll;
+import hudson.model.User;
+import hudson.security.ACL;
+import hudson.security.ACLContext;
+import jenkins.model.Jenkins;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.MockAuthorizationStrategy;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
 @WithJenkins
 class JenkinsUtilsTest {
 
-    private static JenkinsRule j;
-
-    @BeforeAll
-    static void setUp(JenkinsRule rule) {
-        j = rule;
-    }
-
     @Test
-    void testCanRestart() {
+    void testCanRestart(JenkinsRule j) {
         if (Functions.isWindows()) {
             assertFalse(JenkinsUtils.canRestart());
         } else {
@@ -52,7 +49,29 @@ class JenkinsUtilsTest {
     }
 
     @Test
-    void testHasAdministerPermission() {
+    void testHasAdministerPermission(JenkinsRule j) {
         assertTrue(JenkinsUtils.hasAdministerPermission());
+    }
+
+    @Test
+    void testHasAdministerPermissionReturnsFalseForNonAdmin(JenkinsRule j) {
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy()
+                .grant(Jenkins.ADMINISTER)
+                .everywhere()
+                .to("admin")
+                .grant(Jenkins.READ)
+                .everywhere()
+                .to("reader"));
+
+        User admin = User.getOrCreateByIdOrFullName("admin");
+        User reader = User.getOrCreateByIdOrFullName("reader");
+
+        try (ACLContext ignored = ACL.as2(admin.impersonate2())) {
+            assertTrue(JenkinsUtils.hasAdministerPermission());
+        }
+        try (ACLContext ignored = ACL.as2(reader.impersonate2())) {
+            assertFalse(JenkinsUtils.hasAdministerPermission());
+        }
     }
 }
