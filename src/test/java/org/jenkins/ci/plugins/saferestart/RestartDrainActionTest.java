@@ -62,17 +62,27 @@ class RestartDrainActionTest {
 
         BlockingBuilder blocker = new BlockingBuilder();
         FreeStyleBuild blockerBuild = startBlocker(j.createFreeStyleProject("blocker"), blocker);
-        RestartDrain.get().start("maintenance");
-        HtmlPage active = wc.goTo(Constants.DRAIN_URL);
-        assertThat(active.getWebResponse().getStatusCode(), is(200));
-        assertThat(
-                "the page lists the builds holding the restart",
-                active.asNormalizedText(),
-                containsString(blockerBuild.getFullDisplayName()));
-
-        RestartDrain.get().cancel();
-        blocker.release(blockerBuild.getNumber());
-        j.assertBuildStatusSuccess(j.waitForCompletion(blockerBuild));
+        try {
+            RestartDrain.get().start("maintenance");
+            HtmlPage active = wc.goTo(Constants.DRAIN_URL);
+            assertThat(active.getWebResponse().getStatusCode(), is(200));
+            if (JenkinsUtils.canRestart()) {
+                assertThat(
+                        "the page lists the builds holding the restart",
+                        active.asNormalizedText(),
+                        containsString(blockerBuild.getFullDisplayName()));
+            } else {
+                // WindowsLifecycle.canRestart() returns false outside a restartable Windows service
+                assertThat(
+                        "the page explains Jenkins cannot restart on this platform",
+                        active.asNormalizedText(),
+                        containsString("Jenkins cannot restart itself on this platform."));
+            }
+        } finally {
+            RestartDrain.get().cancel();
+            blocker.release(blockerBuild.getNumber());
+            j.assertBuildStatusSuccess(j.waitForCompletion(blockerBuild));
+        }
     }
 
     @Test
