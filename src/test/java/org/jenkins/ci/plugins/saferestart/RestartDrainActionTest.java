@@ -25,7 +25,10 @@ package org.jenkins.ci.plugins.saferestart;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.jenkins.ci.plugins.saferestart.RestartDrainTestSupport.installFakeRestarter;
 import static org.jenkins.ci.plugins.saferestart.RestartDrainTestSupport.startBlocker;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,12 +44,12 @@ import java.util.List;
 import org.htmlunit.HttpMethod;
 import org.htmlunit.Page;
 import org.htmlunit.WebRequest;
-import org.htmlunit.html.HtmlAnchor;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.util.NameValuePair;
 import org.jenkins.ci.plugins.saferestart.RestartDrainTestSupport.BlockingBuilder;
 import org.jenkins.ci.plugins.saferestart.RestartDrainTestSupport.FakeRestarter;
 import org.junit.jupiter.api.Test;
+import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
@@ -144,27 +147,38 @@ class RestartDrainActionTest {
     }
 
     @Test
+    @Issue("https://github.com/jenkinsci/saferestart-plugin/issues/85")
     void drainLinkResolvesFromSecondaryView(JenkinsRule j) throws Exception {
         installFakeRestarter();
-        j.jenkins.addView(new ListView("secondary"));
+        ListView secondary = new ListView("secondary");
+        j.jenkins.addView(secondary);
         RestartDrainAction action = ExtensionList.lookupSingleton(RestartDrainAction.class);
+        SafeRestartRootAction safeRestartAction = ExtensionList.lookupSingleton(SafeRestartRootAction.class);
         action.setCanRestart(() -> true);
         try {
+            assertThat(j.jenkins.getActions(), hasItem(action));
+            assertThat(action.getIconFileName(), is(Constants.ICON));
+
             JenkinsRule.WebClient wc = j.createWebClient();
             HtmlPage viewPage = wc.goTo("view/secondary/");
-            HtmlAnchor drainLink = viewPage.getAnchorByText(Messages.RestartDrainAction_displayName());
-            HtmlPage drainPage = drainLink.click();
+            assertThat(viewPage.getWebResponse().getStatusCode(), is(200));
+            String viewHtml = viewPage.getWebResponse().getContentAsString();
+            assertThat(viewHtml, containsString("/" + Constants.DRAIN_URL));
+            assertThat(viewHtml, not(containsString("view/secondary/" + Constants.DRAIN_URL)));
+
+            HtmlPage drainPage = wc.goTo(Constants.DRAIN_URL + "/");
             assertThat(drainPage.getWebResponse().getStatusCode(), is(200));
             assertThat(drainPage.getUrl().getPath(), containsString("/" + Constants.DRAIN_URL));
 
+            SafeRestartConfiguration.get().setWaitForRunningBuilds(true);
+            assertThat(action.getIconFileName(), is(nullValue()));
+            assertThat(safeRestartAction.getUrlName(), is("/" + Constants.DRAIN_URL));
+
             if (JenkinsUtils.canRestart()) {
-                SafeRestartConfiguration.get().setWaitForRunningBuilds(true);
                 HtmlPage viewPageDrainDefault = wc.goTo("view/secondary/");
-                HtmlAnchor safeRestartLink =
-                        viewPageDrainDefault.getAnchorByText(Messages.SafeRestartRootAction_displayName());
-                HtmlPage safeRestartDrainPage = safeRestartLink.click();
-                assertThat(safeRestartDrainPage.getWebResponse().getStatusCode(), is(200));
-                assertThat(safeRestartDrainPage.getUrl().getPath(), containsString("/" + Constants.DRAIN_URL));
+                String drainDefaultHtml = viewPageDrainDefault.getWebResponse().getContentAsString();
+                assertThat(drainDefaultHtml, containsString("/" + Constants.DRAIN_URL));
+                assertThat(drainDefaultHtml, not(containsString("view/secondary/" + Constants.DRAIN_URL)));
             }
         } finally {
             SafeRestartConfiguration.get().setWaitForRunningBuilds(false);
