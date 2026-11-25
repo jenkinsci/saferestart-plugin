@@ -8,7 +8,7 @@
           <p>${%Jenkins cannot restart itself on this platform.}</p>
         </j:when>
         <j:when test="${it.drain.active}">
-          <p>${%Started {1} ago by {0}.(it.drain.startedBy, it.sinceAgo)}</p>
+          <p>${%startedBy(it.drain.startedBy, it.sinceAgo)}</p>
           <j:if test="${it.drain.message != null}">
             <p>${%Restart message}: ${it.drain.message}</p>
           </j:if>
